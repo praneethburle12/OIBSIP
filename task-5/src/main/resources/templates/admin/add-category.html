@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    th:replace="~{layout :: layout(~{::title}, ~{::content}, ~{::scripts})}">
+
+<head>
+    <title>Add Category - Modern Digital Library</title>
+</head>
+
+<body>
+    <div th:fragment="content">
+        <div class="page-header mb-4">
+            <h1 class="page-title mb-1">Add New Category</h1>
+            <p class="text-secondary mb-0">Create a new classification for library books</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm p-4 p-md-5">
+                    <form th:action="@{/admin/categories/add}" th:object="${category}" method="post">
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-uppercase">Category Name</label>
+                            <input type="text" th:field="*{name}"
+                                class="form-control form-control-lg bg-light border-0 px-4" required
+                                placeholder="e.g. Science Fiction">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-uppercase">Description</label>
+                            <textarea th:field="*{description}" class="form-control bg-light border-0 px-4" rows="4"
+                                placeholder="Brief description of the category"></textarea>
+                        </div>
+                        <div class="d-flex gap-3 pt-4 border-top">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm">
+                                <i class="bi bi-folder-plus me-2"></i> Save Category
+                            </button>
+                            <a th:href="@{/admin/categories}" class="btn btn-light btn-lg rounded-pill px-5">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="scripts">
+    </div>
+</body>
+
+</html>

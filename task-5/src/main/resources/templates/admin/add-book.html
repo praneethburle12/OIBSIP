@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    th:replace="~{layout :: layout(~{::title}, ~{::content}, ~{::scripts})}">
+
+<head>
+    <title>Add Book - Modern Digital Library</title>
+</head>
+
+<body>
+    <div th:fragment="content">
+        <div class="page-header mb-4">
+            <h1 class="page-title mb-1">Add New Book</h1>
+            <p class="text-secondary mb-0">Expand the library collection by adding a new title</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm p-4 p-md-5">
+                    <form th:action="@{/admin/books/add}" th:object="${book}" method="post">
+                        <div class="row g-4">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold small text-uppercase">Book Title</label>
+                                <input type="text" th:field="*{title}"
+                                    class="form-control form-control-lg bg-light border-0 px-4" required
+                                    placeholder="e.g. The Great Gatsby">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-uppercase">Author</label>
+                                <input type="text" th:field="*{author}"
+                                    class="form-control form-control-lg bg-light border-0 px-4" required
+                                    placeholder="e.g. F. Scott Fitzgerald">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-uppercase">ISBN</label>
+                                <input type="text" th:field="*{isbn}"
+                                    class="form-control form-control-lg bg-light border-0 px-4" required
+                                    placeholder="e.g. 9780743273565">
+                            </div>
+
+                            <div class="col-md-8">
+                                <label class="form-label fw-bold small text-uppercase">Category</label>
+                                <input type="text" name="categoryName"
+                                    class="form-control form-control-lg bg-light border-0 px-4" list="categoryOptions"
+                                    required placeholder="Select or type category...">
+                                <datalist id="categoryOptions">
+                                    <option th:each="cat : ${categories}" th:value="${cat.name}"></option>
+                                </datalist>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small text-uppercase">Total Quantity</label>
+                                <input type="number" th:field="*{totalQuantity}"
+                                    class="form-control form-control-lg bg-light border-0 px-4" required min="1">
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-3 pt-5 mt-4 border-top">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm">
+                                <i class="bi bi-plus-lg me-2"></i> Save Book
+                            </button>
+                            <a th:href="@{/admin/books}" class="btn btn-light btn-lg rounded-pill px-5">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="scripts">
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::content}, ~{::scripts})}">
+
+<head>
+    <title>Admin Dashboard - Modern Digital Library</title>
+</head>
+
+<body>
+    <div th:fragment="content">
+        <header class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-0">Library Overview</h2>
+                <p class="text-muted">Welcome back, Admin</p>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="card p-3 bg-white h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Total Books</p>
+                            <h3 class="fw-bold mb-0" th:text="${totalBooks}">120</h3>
+                        </div>
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-3">
+                            <i class="bi bi-book text-primary fs-3"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 bg-white h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Available</p>
+                            <h3 class="fw-bold mb-0 text-success" th:text="${availableBooks}">85</h3>
+                        </div>
+                        <div class="bg-success bg-opacity-10 p-3 rounded-3">
+                            <i class="bi bi-check-circle text-success fs-3"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 bg-white h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Issued</p>
+                            <h3 class="fw-bold mb-0 text-warning" th:text="${issuedBooks}">35</h3>
+                        </div>
+                        <div class="bg-warning bg-opacity-10 p-3 rounded-3">
+                            <i class="bi bi-journal-text text-warning fs-3"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-3 bg-white h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Overdue</p>
+                            <h3 class="fw-bold mb-0 text-danger" th:text="${overdueBooks}">5</h3>
+                        </div>
+                        <div class="bg-danger bg-opacity-10 p-3 rounded-3">
+                            <i class="bi bi-exclamation-triangle text-danger fs-3"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4 g-4">
+            <div class="col-md-6">
+                <div class="card p-4 h-100 border-0">
+                    <h4 class="fw-bold mb-4">Financial Overview</h4>
+                    <div class="d-flex justify-content-between align-items-center mb-3 p-3 bg-light rounded-3">
+                        <span class="text-muted">Collected Fines</span>
+                        <h5 class="fw-bold text-success mb-0" th:text="|₹${collectedFines}|">₹1200</h5>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3 p-3 bg-light rounded-3">
+                        <span class="text-muted">Pending Fines</span>
+                        <h5 class="fw-bold text-danger mb-0" th:text="|₹${pendingFines}|">₹450</h5>
+                    </div>
+                    <a th:href="@{/admin/reports}" class="btn btn-outline-primary w-100 mt-2">
+                        <i class="bi bi-file-earmark-bar-graph me-2"></i> View Detailed Reports
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card p-4 h-100 border-0">
+                    <h4 class="fw-bold mb-4">Quick Actions</h4>
+                    <div class="list-group list-group-flush">
+                        <a th:href="@{/admin/books/add}"
+                            class="list-group-item list-group-item-action py-3 d-flex align-items-center border-0 rounded-3 mb-2 bg-light">
+                            <i class="bi bi-plus-circle-fill text-primary me-3 fs-5"></i>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Add New Book</h6>
+                                <small class="text-muted">Expand the library collection</small>
+                            </div>
+                        </a>
+                        <a th:href="@{/admin/reservations}"
+                            class="list-group-item list-group-item-action py-3 d-flex align-items-center border-0 rounded-3 mb-2 bg-light">
+                            <i class="bi bi-calendar-check-fill text-warning me-3 fs-5"></i>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Manage Reservations</h6>
+                                <small class="text-muted">Approve or reject requests</small>
+                            </div>
+                        </a>
+                        <a th:href="@{/admin/users/add}"
+                            class="list-group-item list-group-item-action py-3 d-flex align-items-center border-0 rounded-3 mb-2 bg-light">
+                            <i class="bi bi-person-plus-fill text-success me-3 fs-5"></i>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Register Member</h6>
+                                <small class="text-muted">Add a new library member</small>
+                            </div>
+                        </a>
+                        <a th:href="@{/admin/settings}"
+                            class="list-group-item list-group-item-action py-3 d-flex align-items-center border-0 rounded-3 bg-light">
+                            <i class="bi bi-gear-fill text-warning me-3 fs-5"></i>
+                            <div>
+                                <h6 class="mb-0 fw-bold">System Settings</h6>
+                                <small class="text-muted">Configure library policies</small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="scripts">
+        <!-- Dashboard specific scripts if any -->
+    </div>
+</body>
+
+</html>

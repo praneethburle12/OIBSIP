@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    th:replace="~{layout :: layout(~{::title}, ~{::content}, ~{::scripts})}">
+
+<head>
+    <title>Manage Books - Modern Digital Library</title>
+</head>
+
+<body>
+    <div th:fragment="content">
+        <div class="page-header d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="page-title mb-1">Manage Books</h1>
+                <p class="text-secondary mb-0">Add, edit, or remove books from the library collection</p>
+            </div>
+            <a th:href="@{/admin/books/add}" class="btn btn-primary rounded-pill px-4 py-2">
+                <i class="bi bi-plus-lg me-2"></i> Add New Book
+            </a>
+        </div>
+
+        <div class="card border-0 shadow-sm overflow-hidden">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="px-4 py-3 border-0">Title</th>
+                                <th class="py-3 border-0">Author</th>
+                                <th class="py-3 border-0">ISBN</th>
+                                <th class="py-3 border-0">Category</th>
+                                <th class="py-3 border-0">Inventory</th>
+                                <th class="px-4 py-3 border-0 text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="book : ${books}">
+                                <td class="px-4 py-3">
+                                    <div class="fw-bold text-dark" th:text="${book.title}">Title</div>
+                                </td>
+                                <td class="py-3" th:text="${book.author}">Author</td>
+                                <td class="py-3">
+                                    <code class="text-primary small" th:text="${book.isbn}">ISBN</code>
+                                </td>
+                                <td class="py-3">
+                                    <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3"
+                                        th:text="${book.category.name}">Category</span>
+                                </td>
+                                <td class="py-3">
+                                    <span class="fw-medium"
+                                        th:text="${book.availableQuantity + '/' + book.totalQuantity}">10/10</span>
+                                </td>
+                                <td class="px-4 py-3 text-end">
+                                    <div class="btn-group gap-2">
+                                        <a th:href="@{'/admin/books/edit/' + ${book.id}}"
+                                            class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                            <i class="bi bi-pencil me-1"></i> Edit
+                                        </a>
+                                        <a th:href="@{'/admin/books/delete/' + ${book.id}}"
+                                            class="btn btn-sm btn-outline-danger rounded-pill px-3"
+                                            onclick="return confirm('Delete this book?')">
+                                            <i class="bi bi-trash me-1"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="scripts">
+    </div>
+</body>
+
+</html>

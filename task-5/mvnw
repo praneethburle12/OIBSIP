@@ -1,0 +1,157 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# Maven Start Up Batch script
+#
+# Required ENV vars:
+#   JAVA_HOME - location of a JDK home dir
+#
+# Optional ENV vars
+#   M2_HOME - location of maven2's installed home (optional)
+#   MAVEN_OPTS - parameters passed to the Java VM when running Maven
+#     e.g. to debug Maven itself, use
+#   set MAVEN_OPTS=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000
+#   MAVEN_SKIP_RC - flag to disable loading of mavenrc files
+# ---------------------------------------------------------------------------
+
+if [ -z "$JAVA_HOME" ] ; then
+  echo "Error: JAVA_HOME is not set."
+  exit 1
+fi
+
+JAVA_EXE="$JAVA_HOME/bin/java"
+
+if [ ! -x "$JAVA_EXE" ] ; then
+  echo "Error: JAVA_HOME is not defined correctly for Java."
+  echo "We cannot execute $JAVA_EXE"
+  exit 1
+fi
+
+cygwin=false
+mingw=false
+darwin=false
+nonstop=false
+case "`uname`" in
+  CYGWIN*) cygwin=true ;;
+  MINGW*) mingw=true;;
+  Darwin*) darwin=true
+    # Use /usr/libexec/java_home if available, otherwise fall back to /Library/Java/Home
+    # See https://developer.apple.com/library/mac/qa/qa1170/_index.html
+    if [ -z "$JAVA_HOME" ]; then
+      if [ -x "/usr/libexec/java_home" ]; then
+        export JAVA_HOME="`/usr/libexec/java_home`"
+      else
+        export JAVA_HOME="/Library/Java/Home"
+      fi
+    fi
+    ;;
+  *)
+    if [ -z "$JAVA_HOME" ] ; then
+      echo "Warning: JAVA_HOME environment variable is not set."
+    fi
+    ;;
+esac
+
+if [ -z "$MAVEN_HOME" ] ; then
+  ## resolve links - $0 may be a link to maven's home
+  PRG="$0"
+
+  # need this for relative symlinks
+  while [ -h "$PRG" ] ; do
+    ls=`ls -ld "$PRG"`
+    link=`expr "$ls" : '.*-> \(.*\)$'`
+    if expr "$link" : '/.*' > /dev/null; then
+      PRG="$link"
+    else
+      PRG="`dirname "$PRG"`/$link"
+    fi
+  done
+
+  saveddir=`pwd`
+
+  M2_HOME=`dirname "$PRG"`/..
+
+  # make it fully qualified
+  M2_HOME=`cd "$M2_HOME" && pwd`
+
+  cd "$saveddir"
+fi
+
+##
+## Expansion of M2_HOME and M2 variables.
+##
+if [ -z "$M2_HOME" ] ; then
+  M2_HOME="/usr/share/maven"
+fi
+
+export M2_HOME
+export PATH="$M2_HOME/bin:$PATH"
+
+CLASSWORLDS_JAR="$M2_HOME"/boot/plexus-classworlds-*.jar
+CLASSWORLDS_LAUNCHER=org.codehaus.plexus.classworlds.launcher.Launcher
+
+# For Cygwin, switch paths to Windows format before running java
+if $cygwin; then
+  [ -n "$M2_HOME" ] &&
+    M2_HOME=`cygpath --path --windows "$M2_HOME"`
+  [ -n "$JAVA_HOME" ] &&
+    JAVA_HOME=`cygpath --path --windows "$JAVA_HOME"`
+  [ -n "$CLASSPATH" ] &&
+    CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
+fi
+
+# For Mingw, ensure paths are in UNIX format before anything is touched
+if $mingw ; then
+  [ -n "$M2_HOME" ] &&
+    M2_HOME="`(cd "$M2_HOME"; pwd)`"
+  [ -n "$JAVA_HOME" ] &&
+    JAVA_HOME="`(cd "$JAVA_HOME"; pwd)`"
+fi
+
+if [ -z "$JAVA_HOME" ]; then
+  javaExecutable="`which javac`"
+  if [ -n "$javaExecutable" ] && ! [ "`expr \"$javaExecutable\" : '\([^ ]*\)'`" = "no" ]; then
+    # readlink(1) is not available as standard on Solaris 10.
+    readLink=`which readlink`
+    if [ ! `expr "$readLink" : '\([^ ]*\)'` = "no" ]; then
+      if $darwin ; then
+        javaHome="`dirname \"$javaExecutable\"`"
+        javaHome=`expr "$javaHome" : '\(.*\)/bin'`
+        JAVA_HOME="`cd \"$javaHome\" && pwd`"
+        export JAVA_HOME
+      else
+        JAVA_HOME="`dirname \"$javaExecutable\"`"
+        JAVA_HOME=`expr "$JAVA_HOME" : '\(.*\)/bin'`
+        export JAVA_HOME
+      fi
+    fi
+  fi
+fi
+
+if [ -z "$MVNW_HOME" ]; then
+  MVNW_HOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+fi
+
+# Provide a "standardized" way to retrieve the CLI args that will
+# work with both Windows and non-Windows executions.
+if [ $# -gt 0 ] ; then
+  args="$@"
+else
+  args=""
+fi
+
+# Get the wrapper jar
+WRAPPER_JAR="$MVNW_HOME/.mvn/wrapper/maven-wrapper.jar"
+WRAPPER_LAUNCHER="org.apache.maven.wrapper.MavenWrapperMain"
+WRAPPER_PROPERTIES="$MVNW_HOME/.mvn/wrapper/maven-wrapper.properties"
+
+# If wrapper jar does not exist, download it
+if [ ! -f "$WRAPPER_JAR" ]; then
+  echo "Downloading Maven wrapper..."
+  if command -v wget &> /dev/null; then
+    wget -q "$(grep distributionUrl "$WRAPPER_PROPERTIES" | cut -d= -f2)" -O /tmp/maven.zip
+  elif command -v curl &> /dev/null; then
+    curl -s "$(grep distributionUrl "$WRAPPER_PROPERTIES" | cut -d= -f2)" -o /tmp/maven.zip
+  fi
+fi
+
+exec "$JAVA_HOME/bin/java" -classpath "$WRAPPER_JAR" $MAVEN_OPTS $MAVEN_DEBUG_OPTS "$WRAPPER_LAUNCHER" $args

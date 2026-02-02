@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    th:replace="~{layout :: layout(~{::title}, ~{::content}, ~{::scripts})}">
+
+<head>
+    <title>Edit Book - Modern Digital Library</title>
+</head>
+
+<body>
+    <div th:fragment="content">
+        <div class="page-header mb-4">
+            <h1 class="page-title mb-1">Edit Book Details</h1>
+            <p class="text-secondary mb-0">Update information for "<span th:text="${book.title}"
+                    class="text-primary fw-bold">Title</span>"</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm p-4 p-md-5">
+                    <form th:action="@{'/admin/books/edit/' + ${book.id}}" th:object="${book}" method="post">
+                        <div class="row g-4">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold small text-uppercase">Book Title</label>
+                                <input type="text" th:field="*{title}"
+                                    class="form-control form-control-lg bg-light border-0 px-4" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-uppercase">Author</label>
+                                <input type="text" th:field="*{author}"
+                                    class="form-control form-control-lg bg-light border-0 px-4" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-uppercase">Category</label>
+                                <input type="text" name="categoryName"
+                                    class="form-control form-control-lg bg-light border-0 px-4" list="categoryOptions"
+                                    th:value="${book.category.name}" required>
+                                <datalist id="categoryOptions">
+                                    <option th:each="cat : ${categories}" th:value="${cat.name}"></option>
+                                </datalist>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-uppercase">Total Quantity</label>
+                                <input type="number" th:field="*{totalQuantity}"
+                                    class="form-control form-control-lg bg-light border-0 px-4" required min="1">
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-3 pt-5 mt-4 border-top">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm">
+                                <i class="bi bi-check-lg me-2"></i> Update Book
+                            </button>
+                            <a th:href="@{/admin/books}" class="btn btn-light btn-lg rounded-pill px-5">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="scripts">
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::content}, ~{::scripts})}">
+
+<head>
+    <title th:text="${book.title} + ' - Modern Digital Library'"></title>
+</head>
+
+<body>
+    <div th:fragment="content">
+        <header class="mb-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/user/books}">Library</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Book Details</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold" th:text="${book.title}">Book Title</h2>
+            <p class="text-muted" th:text="'by ' + ${book.author}">Author Name</p>
+        </header>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm p-4 text-center h-100 bg-white">
+                    <div class="bg-primary bg-opacity-10 rounded-4 p-5 mb-4 d-inline-block mx-auto">
+                        <i class="bi bi-book text-primary" style="font-size: 5rem;"></i>
+                    </div>
+                    <h5 class="text-muted small mb-1">ISBN</h5>
+                    <p class="fw-bold" th:text="${book.isbn}">0000000000</p>
+
+                    <div class="mt-4 pt-4 border-top">
+                        <span th:if="${book.availableQuantity > 0}"
+                            class="badge bg-success-subtle text-success px-4 py-2 rounded-pill">
+                            Available Now
+                        </span>
+                        <span th:unless="${book.availableQuantity > 0}"
+                            class="badge bg-danger-subtle text-danger px-4 py-2 rounded-pill">
+                            Currently Reserved
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card border-0 shadow-sm p-4 h-100 bg-white">
+                    <div class="mb-5">
+                        <h4 class="fw-bold mb-3">About this Book</h4>
+                        <p class="text-muted lh-lg"
+                            th:text="${book.description ?: 'No description available for this book.'}"></p>
+                    </div>
+
+                    <div class="row g-4 mb-5">
+                        <div class="col-sm-4">
+                            <label class="text-muted small fw-bold text-uppercase mb-1 d-block">Category</label>
+                            <span class="fw-medium" th:text="${book.category.name}">Science</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="text-muted small fw-bold text-uppercase mb-1 d-block">Inventory</label>
+                            <span class="fw-medium"
+                                th:text="|${book.availableQuantity} of ${book.totalQuantity} available|">5 / 10</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="text-muted small fw-bold text-uppercase mb-1 d-block">Published</label>
+                            <span class="fw-medium" th:text="${book.publicationYear}">2023</span>
+                        </div>
+                    </div>
+
+                    <hr class="mb-4">
+
+                    <div class="d-flex flex-wrap gap-3 mt-auto">
+                        <!-- Issue Button -->
+                        <form th:if="${book.availableQuantity > 0}" th:action="@{'/user/books/issue/' + ${book.id}}"
+                            method="post" class="flex-grow-1 flex-md-grow-0">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 py-3 w-100 shadow-sm">
+                                <i class="bi bi-check2-circle me-2"></i> Issue This Book
+                            </button>
+                        </form>
+
+                        <!-- Reservation Button -->
+                        <form th:if="${book.availableQuantity == 0}" th:action="@{'/user/books/reserve/' + ${book.id}}"
+                            method="post" class="flex-grow-1 flex-md-grow-0">
+                            <button type="submit"
+                                class="btn btn-warning btn-lg rounded-pill px-5 py-3 w-100 shadow-sm text-white">
+                                <i class="bi bi-bookmark-plus me-2"></i> Reserve Now
+                            </button>
+                        </form>
+
+                        <a th:href="@{/user/books}"
+                            class="btn btn-light btn-lg rounded-pill px-5 py-3 flex-grow-1 flex-md-grow-0">
+                            <i class="bi bi-arrow-left me-2"></i> Back to Library
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="scripts">
+        <!-- Dashboard specific scripts -->
+    </div>
+</body>
+
+</html>

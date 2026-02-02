@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    th:fragment="layout(title, content, scripts)">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">Digital Library</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary-color: #64748b;
+            --bg-color: #f8fafc;
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --nav-height: 80px;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: #1e293b;
+            margin: 0;
+            padding-top: var(--nav-height);
+        }
+
+        /* Premium Navbar */
+        .navbar {
+            height: var(--nav-height);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #0f172a !important;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-brand i {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.8rem;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: #475569 !important;
+            padding: 0.5rem 1.2rem !important;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .nav-link.active {
+            color: var(--primary-color) !important;
+            background: rgba(79, 70, 229, 0.1);
+        }
+
+        /* User Profile Dropdown */
+        .user-dropdown .dropdown-toggle {
+            background: #f1f5f9;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 600;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-dropdown .dropdown-toggle::after {
+            display: none;
+        }
+
+        .user-dropdown .dropdown-menu {
+            border: none;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            padding: 10px;
+            margin-top: 15px;
+        }
+
+        .dropdown-item {
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dropdown-item i {
+            font-size: 1.1rem;
+        }
+
+        /* Logout Button */
+        .btn-logout {
+            color: #ef4444 !important;
+        }
+
+        .btn-logout:hover {
+            background: rgba(239, 68, 68, 0.1) !important;
+        }
+
+        /* Main Content */
+        .main-container {
+            padding: 2.5rem 1.5rem;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* UI Elements */
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: #0f172a;
+        }
+
+        /* Glassmorphism Cards */
+        .card {
+            border: 1px solid rgba(226, 232, 240, 0.5);
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 2rem 0;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 4rem;
+            color: #64748b;
+            text-align: center;
+        }
+
+        @media (max-width: 991.98px) {
+            .navbar {
+                height: auto;
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+
+            .navbar-collapse {
+                background: white;
+                margin-top: 1rem;
+                border-radius: 20px;
+                padding: 1.5rem;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid px-lg-5">
+            <a class="navbar-brand" th:href="@{/dashboard}">
+                <i class="bi bi-book-half"></i>
+                <span>Modern Library</span>
+            </a>
+
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarContent">
+                <i class="bi bi-list fs-1"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/dashboard}">
+                            <i class="bi bi-grid-1x2-fill"></i> Dashboard
+                        </a>
+                    </li>
+
+                    <!-- Admin Links -->
+                    <th:block sec:authorize="hasRole('ADMIN')">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/books}">
+                                <i class="bi bi-journal-album"></i> Books
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/categories}">
+                                <i class="bi bi-tags"></i> Categories
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/users}">
+                                <i class="bi bi-people"></i> Users
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/issued-books}">
+                                <i class="bi bi-clock-history"></i> Issuances
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/reservations}">
+                                <i class="bi bi-calendar-check"></i> Reservations
+                            </a>
+                        </li>
+                    </th:block>
+
+                    <!-- User Links -->
+                    <th:block sec:authorize="hasRole('USER')">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/user/books}">
+                                <i class="bi bi-search"></i> Browse
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/user/my-books}">
+                                <i class="bi bi-bookmark-heart"></i> My Books
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/user/my-reservations}">
+                                <i class="bi bi-calendar-check"></i> My Reservations
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/user/contact}">
+                                <i class="bi bi-patch-question"></i> Help Desk
+                            </a>
+                        </li>
+                    </th:block>
+                </ul>
+
+                <div class="user-dropdown dropdown d-flex align-items-center">
+                    <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle fs-5"></i>
+                        <span class="d-none d-xl-inline" sec:authentication="name">Username</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg animate slideIn">
+                        <li>
+                            <div class="dropdown-header d-flex align-items-center p-3">
+                                <i class="bi bi-shield-check fs-4 me-2 text-primary"></i>
+                                <div>
+                                    <div class="fw-bold text-dark" sec:authentication="name">Name</div>
+                                    <small class="text-muted" sec:authorize="hasRole('ADMIN')">Administrator</small>
+                                    <small class="text-muted" sec:authorize="hasRole('USER')">Member</small>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/dashboard}">
+                                <i class="bi bi-person-gear"></i> My Profile
+                            </a>
+                        </li>
+                        <li sec:authorize="hasRole('ADMIN')">
+                            <a class="dropdown-item" th:href="@{/admin/settings}">
+                                <i class="bi bi-gear"></i> Settings
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <form th:action="@{/logout}" method="post">
+                                <button type="submit" class="dropdown-item btn-logout">
+                                    <i class="bi bi-box-arrow-right"></i> Sign Out
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <main class="main-container">
+        <div th:replace="${content}"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container text-center">
+            <p class="mb-0">&copy; <span th:text="${#calendars.year(#calendars.createNow())}">2026</span> Modern Digital
+                Library. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <th:block th:replace="${scripts}"></th:block>
+</body>
+
+</html>

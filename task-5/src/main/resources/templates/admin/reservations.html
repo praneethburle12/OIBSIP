@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    th:replace="~{layout :: layout(~{::title}, ~{::content}, ~{::scripts})}">
+
+<head>
+    <title>Manage Reservations - Modern Digital Library</title>
+</head>
+
+<body>
+    <div th:fragment="content">
+        <div class="page-header mb-4">
+            <h1 class="page-title mb-1">Book Reservations</h1>
+            <p class="text-secondary mb-0">Process pending book requests from users</p>
+        </div>
+
+        <!-- Pending Approvals -->
+        <div class="card border-0 shadow-sm overflow-hidden mb-5">
+            <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center">
+                <div class="bg-warning bg-opacity-10 p-2 rounded-3 me-3">
+                    <i class="bi bi-hourglass-split text-warning"></i>
+                </div>
+                <h5 class="mb-0 fw-bold">Pending Approvals</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="px-4 py-3 border-0">Book</th>
+                                <th class="py-3 border-0">User</th>
+                                <th class="py-3 border-0">Requested Date</th>
+                                <th class="px-4 py-3 border-0 text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="res : ${pendingReservations}">
+                                <td class="px-4 py-3">
+                                    <div class="fw-bold text-dark" th:text="${res.book.title}">Book Title</div>
+                                </td>
+                                <td class="py-3" th:text="${res.user.fullName}">User</td>
+                                <td class="py-3 text-muted"
+                                    th:text="${#temporals.format(res.reservationDate, 'MMM dd, yyyy HH:mm')}">Date</td>
+                                <td class="px-4 py-3 text-end">
+                                    <div class="btn-group gap-2">
+                                        <form th:action="@{'/admin/reservations/approve/' + ${res.id}}" method="post">
+                                            <button type="submit" class="btn btn-sm btn-success rounded-pill px-3">
+                                                <i class="bi bi-check2 me-1"></i> Approve
+                                            </button>
+                                        </form>
+                                        <form th:action="@{'/admin/reservations/reject/' + ${res.id}}" method="post">
+                                            <button type="submit"
+                                                class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                                                <i class="bi bi-x me-1"></i> Reject
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(pendingReservations)}">
+                                <td colspan="4" class="text-center text-muted py-5">
+                                    <div class="opacity-50 fs-2 mb-2"><i class="bi bi-bookmark-check"></i></div>
+                                    No pending reservations found.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reservations History -->
+        <div class="card border-0 shadow-sm overflow-hidden">
+            <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center">
+                <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-3">
+                    <i class="bi bi-clock-history text-primary"></i>
+                </div>
+                <h5 class="mb-0 fw-bold">Reservation History</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 table-sm">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="px-4 py-3 border-0">Book</th>
+                                <th class="py-3 border-0">User</th>
+                                <th class="py-3 border-0">Status</th>
+                                <th class="px-4 py-3 border-0">Processed Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="res : ${reservations}">
+                                <td class="px-4 py-3" th:text="${res.book.title}">Book Title</td>
+                                <td class="py-3" th:text="${res.user.fullName}">User</td>
+                                <td class="py-3">
+                                    <span th:if="${res.status == 'APPROVED'}"
+                                        class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">APPROVED</span>
+                                    <span th:if="${res.status == 'REJECTED'}"
+                                        class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill">REJECTED</span>
+                                    <span th:if="${res.status == 'PENDING'}"
+                                        class="badge bg-warning-subtle text-warning px-3 py-2 rounded-pill">PENDING</span>
+                                </td>
+                                <td class="px-4 py-3 text-muted"
+                                    th:text="${res.approvalDate != null ? #temporals.format(res.approvalDate, 'MMM dd, yyyy HH:mm') : '-'}">
+                                    -</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="scripts">
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::content}, ~{::scripts})}">
+
+<head>
+    <title>My Reservations - Modern Digital Library</title>
+</head>
+
+<body>
+    <div th:fragment="content">
+        <header class="mb-4">
+            <h2 class="fw-bold">My Reservations</h2>
+            <p class="text-muted">Track your book reservations and their status</p>
+        </header>
+
+        <!-- Alerts -->
+        <div th:if="${success}" class="alert alert-success border-0 shadow-sm rounded-3 mb-4">
+            <i class="bi bi-check-circle-fill me-2"></i> <span th:text="${success}"></span>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger border-0 shadow-sm rounded-3 mb-4">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> <span th:text="${error}"></span>
+        </div>
+
+        <!-- Reservations List -->
+        <div th:if="${#lists.isEmpty(reservations)}" class="text-center py-5">
+            <div class="bg-light rounded-circle d-inline-flex p-4 mb-3">
+                <i class="bi bi-bookmark-x text-muted fs-1"></i>
+            </div>
+            <p class="text-muted">You haven't made any reservations yet</p>
+            <a th:href="@{/user/books}" class="btn btn-primary rounded-pill px-4">Browse Collection</a>
+        </div>
+
+        <div th:if="${!#lists.isEmpty(reservations)}" class="row g-4">
+            <div class="col-md-6" th:each="reservation : ${reservations}">
+                <div class="card border-0 shadow-sm h-100 overflow-hidden">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h5 class="fw-bold mb-1"
+                                    th:text="${reservation.book != null ? reservation.book.title : 'Unknown Title'}">
+                                </h5>
+                                <p class="text-muted small mb-0"
+                                    th:text="${reservation.book != null ? reservation.book.author : 'Unknown'}"></p>
+                            </div>
+                            <span th:if="${reservation.status == 'PENDING'}"
+                                class="badge bg-warning-subtle text-warning px-3 py-2 rounded-pill small">
+                                <i class="bi bi-hourglass-split me-1"></i> Pending
+                            </span>
+                            <span th:if="${reservation.status == 'APPROVED'}"
+                                class="badge bg-success-subtle text-success px-3 py-2 rounded-pill small">
+                                <i class="bi bi-check-circle me-1"></i> Approved
+                            </span>
+                            <span th:if="${reservation.status == 'REJECTED'}"
+                                class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill small">
+                                <i class="bi bi-x-circle me-1"></i> Rejected
+                            </span>
+                        </div>
+
+                        <div class="bg-light p-3 rounded-3 mb-3">
+                            <div class="d-flex justify-content-between small mb-1">
+                                <span class="text-muted">Category:</span>
+                                <span class="fw-medium"
+                                    th:text="${reservation.book != null and reservation.book.category != null ? reservation.book.category.name : 'N/A'}"></span>
+                            </div>
+                            <div class="d-flex justify-content-between small">
+                                <span class="text-muted">Reserved on:</span>
+                                <span class="fw-medium"
+                                    th:text="${reservation.reservationDate != null ? #temporals.format(reservation.reservationDate, 'dd-MM-yyyy') : 'N/A'}"></span>
+                            </div>
+                        </div>
+
+                        <div th:if="${reservation.adminNotes}" class="mb-3">
+                            <label class="small text-muted fw-bold mb-1">Librarian's Note:</label>
+                            <p class="small text-muted mb-0 bg-light p-2 rounded" th:text="${reservation.adminNotes}">
+                            </p>
+                        </div>
+
+                        <div th:if="${reservation.status == 'PENDING'}" class="mt-auto">
+                            <form th:action="@{/user/reservations/cancel/{id}(id=${reservation.id})}" method="post">
+                                <button type="submit" class="btn btn-outline-danger btn-sm w-100 rounded-pill"
+                                    onclick="return confirm('Cancel this reservation?')">
+                                    <i class="bi bi-trash me-1"></i> Cancel Reservation
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="scripts">
+        <!-- Dashboard specific scripts -->
+    </div>
+</body>
+
+</html>

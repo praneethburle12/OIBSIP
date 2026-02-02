@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::content}, ~{::scripts})}">
+
+<head>
+    <title>Return Book - Modern Digital Library</title>
+</head>
+
+<body>
+    <div th:fragment="content">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <header class="mb-4">
+                    <h2 class="fw-bold">Return Book</h2>
+                    <p class="text-muted">Finalize your book return</p>
+                </header>
+
+                <!-- Book Details -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-primary bg-opacity-10 border-0 py-3">
+                        <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-info-circle me-2"></i> Book Information
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="text-muted small fw-bold text-uppercase d-block mb-1">Title</label>
+                                <p class="fw-bold mb-0"
+                                    th:text="${issuedBook != null and issuedBook.book != null ? issuedBook.book.title : 'Unknown Title'}">
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="text-muted small fw-bold text-uppercase d-block mb-1">Author</label>
+                                <p class="fw-medium mb-0"
+                                    th:text="${issuedBook != null and issuedBook.book != null ? issuedBook.book.author : 'Unknown'}">
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="text-muted small fw-bold text-uppercase d-block mb-1">Issue Date</label>
+                                <p class="mb-0 text-muted"
+                                    th:text="${issuedBook != null and issuedBook.issueDate != null ? #temporals.format(issuedBook.issueDate, 'dd-MM-yyyy') : 'N/A'}">
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="text-muted small fw-bold text-uppercase d-block mb-1">Due Date</label>
+                                <p class="mb-0 text-muted"
+                                    th:text="${issuedBook != null and issuedBook.dueDate != null ? #temporals.format(issuedBook.dueDate, 'dd-MM-yyyy') : 'N/A'}">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status & Fine Information -->
+                <div th:if="${issuedBook != null and issuedBook.overdue}"
+                    class="alert alert-warning border-0 shadow-sm rounded-4 p-4 mb-4">
+                    <div class="d-flex gap-3">
+                        <i class="bi bi-exclamation-triangle-fill fs-3 text-warning"></i>
+                        <div>
+                            <h5 class="fw-bold mb-2">Overdue Book</h5>
+                            <p class="mb-3">This book is past its due date. A fine has been calculated below.</p>
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <div class="bg-white bg-opacity-50 p-2 rounded text-center">
+                                        <div class="text-muted small">Days Late</div>
+                                        <div class="fw-bold" th:text="${issuedBook.daysOverdue}">0</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="bg-white bg-opacity-50 p-2 rounded text-center">
+                                        <div class="text-muted small">Fine Rate</div>
+                                        <div class="fw-bold"
+                                            th:text="'₹' + ${#numbers.formatDecimal(settings != null ? settings.finePerDay : 0, 1, 2)}">
+                                            ₹0.00</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${issuedBook == null or !issuedBook.overdue}"
+                    class="alert alert-success border-0 shadow-sm rounded-4 p-4 mb-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <i class="bi bi-check-circle-fill fs-3 text-success"></i>
+                        <div>
+                            <p class="mb-0 fw-medium">Great! The book is within the due date. No fines applicable.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Return Confirmation -->
+                <div class="card border-0 shadow-sm overflow-hidden rounded-4">
+                    <div class="card-body p-4 p-md-5 text-center">
+                        <i class="bi bi-arrow-return-left text-success mb-3" style="font-size: 3rem;"></i>
+                        <h4 class="fw-bold mb-3">Ready to Return?</h4>
+                        <p class="text-muted mb-4">Click confirm below to complete the return process. Thank you for
+                            your cooperation!</p>
+
+                        <form th:action="@{/user/books/return/{id}(id=${issuedBook != null ? issuedBook.id : ''})}"
+                            method="post">
+                            <div class="d-flex flex-wrap gap-3 justify-content-center">
+                                <button type="submit" class="btn btn-success btn-lg rounded-pill px-5 py-3 shadow-sm">
+                                    Confirm Return
+                                </button>
+                                <a th:href="@{/user/my-books}" class="btn btn-light btn-lg rounded-pill px-5 py-3">
+                                    Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="scripts">
+        <!-- Dashboard specific scripts -->
+    </div>
+</body>
+
+</html>
